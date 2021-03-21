@@ -5,6 +5,43 @@
 >
   <span class="visually-hidden">Loading...</span>
 </div>
+<div class="mb-3">
+  <label for="exampleFormControlInput1" class="form-label"></label>
+  <input
+    type="text"
+    [(ngModel)]="carFilter"
+    class="form-control"
+    id="carFilter"
+    placeholder="Enter a Brand"
+  />
+</div>
+<div *ngIf="carFilter.length > 2" class="alert alert-success">
+  {{ carFilter }} searching...
+</div>
+<div class="row" *ngIf="dataLoaded != false">
+  <div *ngFor="let car of cars" class="card" style="width: 17rem">
+    <img src="../assets/default.jpg" class="card-img-top" alt="..." />
+    <div class="card-body">
+      <h5 class="card-title">{{ car.brandName }} {{ car.description }}</h5>
+      <p class="card-subtitle mb-2 text-muted">Gunluk Isler icin en ideali</p>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">Brand: {{ car.brandName }}</li>
+        <li class="list-group-item">Model Year: {{ car.modelYear }}</li>
+        <li class="list-group-item">{{ car.dailyPrice }}$ daily</li>
+      </ul>
+
+      <section style="float: right">
+        <button
+          routerLink="/cars/cardetail/{{ car.carId }}"
+          type="button"
+          class="btn btn-primary"
+        >
+          See More
+        </button>
+      </section>
+    </div>
+  </div>
+</div>
 
 <table *ngIf="dataLoaded != false" class="table">
   <thead>
@@ -21,10 +58,10 @@
   <tr *ngFor="let car of cars">
     <td>{{ car.carId }}</td>
     <td>{{ car.brandName }}</td>
+    <td>{{ car.description }}</td>
     <td>{{ car.colorName }}</td>
     <td>{{ car.available }}</td>
     <td>{{ car.modelYear }}</td>
     <td>{{ car.dailyPrice }}</td>
-    <td>{{ car.description }}</td>
   </tr>
 </table>

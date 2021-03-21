@@ -1,7 +1,22 @@
-<ul class="list-group">
-  <li routerLink="/cars">All Cars</li>
+<ul class="list-group list-group-flush">
+  <li class="list-group-item list-group-item-info">Brands</li>
+  <div class="mb-3">
+    <label for="exampleFormControlInput1" class="form-label"></label>
+    <input
+      type="text"
+      [(ngModel)]="filterText"
+      class="form-control"
+      id="filterText"
+      placeholder="Enter a Brand"
+    />
+  </div>
+  <div *ngIf="filterText.length > 2" class="alert alert-success">
+    {{ filterText }} searching...
+  </div>
+
+  <li routerLink="/cars">All Brands</li>
   <li
-    *ngFor="let brand of brands"
+    *ngFor="let brand of brands | filterBrand: filterText"
     (click)="setCurrentBrand(brand)"
     routerLink="/cars/brand/{{ brand.brandId }}"
     [class]="getCurrentBrand(brand)"
@@ -9,5 +24,6 @@
     {{ brand.brandName }}
   </li>
 </ul>
-
-<h5 *ngIf="currentBrand">{{ currentBrand.brandName }} sectiniz</h5>
+<br />
+<hr />
+<br />

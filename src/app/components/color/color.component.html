@@ -1,3 +1,15 @@
-<ul *ngFor="let color of colors" class="list-group">
-  <li class="list-group-item">{{ color.colorName }}</li>
+<ul class="list-group list-group-flush">
+  <li class="list-group-item list-group-item-info">Colors</li>
+  <li routerLink="/cars">All Colors</li>
+  <li
+    *ngFor="let color of colors"
+    (click)="setCurrentColor(color)"
+    routerLink="/cars/color/{{ color.colorId }}"
+    class="list-group-item"
+  >
+    {{ color.colorName }}
+  </li>
 </ul>
+<br />
+<hr />
+<br />
