@@ -20,7 +20,11 @@
 </div>
 <div class="row" *ngIf="dataLoaded != false">
   <div *ngFor="let car of cars" class="card" style="width: 17rem">
-    <img src="../assets/default.jpg" class="card-img-top" alt="..." />
+    <img
+      src="{{ baseImagePath }}{{ getImagesByCar(car.carId) }}"
+      class="card-img-top"
+      alt="..."
+    />
     <div class="card-body">
       <h5 class="card-title">{{ car.brandName }} {{ car.description }}</h5>
       <p class="card-subtitle mb-2 text-muted">Gunluk Isler icin en ideali</p>

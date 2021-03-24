@@ -6,33 +6,53 @@
   <span class="visually-hidden">Loading...</span>
 </div>
 
-<table *ngIf="dataLoaded != false" class="table">
-  <thead>
-    <tr>
-      <th>RentId</th>
-      <th>Brand</th>
-      <th>Color</th>
-      <th>ModelYear</th>
-      <th>DailyPrice</th>
-      <th>Name</th>
-      <th>Email</th>
-      <th>RentDate</th>
-      <th>ReturnDate</th>
-      <th>CustomerId</th>
-      <th>CarId</th>
-    </tr>
-  </thead>
-  <tr *ngFor="let rental of rentals">
-    <td>{{ rental.rentId }}</td>
-    <td>{{ rental.brandName }} {{ rental.description }}</td>
-    <td>{{ rental.colorName }}</td>
-    <td>{{ rental.modelYear }}</td>
-    <td>{{ rental.dailyPrice }}</td>
-    <td>{{ rental.firstName }}</td>
-    <td>{{ rental.email }}</td>
-    <td>{{ rental.rentDate }}</td>
-    <td>{{ rental.returnDate }}</td>
-    <td>{{ rental.customerId }}</td>
-    <td>{{ rental.carId }}</td>
-  </tr>
-</table>
+<div class="d-grid gap-2">
+  <button
+    type="button"
+    class="btn btn-primary"
+    data-bs-toggle="modal"
+    data-bs-target="#exampleModal"
+  >
+    Details
+  </button>
+</div>
+<div class="card mb-3">
+  <div class="card-body">
+    <h5 class="card-title">Check your details..</h5>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>RentalId</th>
+          <th>Brand</th>
+          <th>Color</th>
+          <th>Rent Date</th>
+          <th>Return Date</th>
+          <th>DailyPrice</th>
+          <th>Total Price</th>
+        </tr>
+      </thead>
+      <tr *ngFor="let rental of rentals">
+        <td>{{ rental.rentId }}</td>
+        <td>{{ rental.brandName }} {{ rental.description }}</td>
+        <td>{{ rental.colorName }}</td>
+        <td>{{ rental.rentDate }}</td>
+        <td>{{ rental.returnDate }}</td>
+        <td>{{ rental.dailyPrice }}</td>
+        <td>{{ rental.dailyPrice * 5 | currency }}</td>
+      </tr>
+    </table>
+
+    <p class="card-text">
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      >
+        Pay for rental
+      </button>
+      <small class="text-muted">Last updated 3 mins ago</small>
+    </p>
+  </div>
+</div>

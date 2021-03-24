@@ -15,6 +15,7 @@ import { CarImageComponent } from './components/car-image/car-image.component';
 import { CarDetailComponent } from './components/car-detail/car-detail.component';
 import { FilterBrandPipe } from './pipes/filter-brand.pipe';
 import { FilterColorPipe } from './pipes/filter-color.pipe';
+import { DateComponent } from './components/date/date.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { FilterColorPipe } from './pipes/filter-color.pipe';
     CarImageComponent,
     CarDetailComponent,
     FilterBrandPipe,
-    FilterColorPipe
+    FilterColorPipe,
+    DateComponent
   ],
   imports: [
     BrowserModule,

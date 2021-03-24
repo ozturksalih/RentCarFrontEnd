@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Car } from 'src/app/models/car';
 import { Rental } from 'src/app/models/rental';
 import { RentalService } from 'src/app/services/rental.service';
+import { CarDetailComponent } from '../car-detail/car-detail.component';
 
 @Component({
   selector: 'app-rental',
@@ -10,6 +12,7 @@ import { RentalService } from 'src/app/services/rental.service';
 export class RentalComponent implements OnInit {
 
   dataLoaded = false;
+  carDetail: Car;
   rentals: Rental[] = [];
   constructor(private rentalService: RentalService) { }
 
@@ -21,6 +24,12 @@ export class RentalComponent implements OnInit {
       this.rentals = response.data;
       this.dataLoaded = true;
     })
+  }
+  checkRental() {
+
+  }
+  setRental() {
+
   }
 
 

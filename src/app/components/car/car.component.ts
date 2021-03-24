@@ -4,6 +4,7 @@ import { Car } from 'src/app/models/car';
 import { CarImageService } from 'src/app/services/car-image.service';
 import { CarService } from 'src/app/services/car.service';
 import { CarImage } from 'src/app/models/carImage';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-car',
@@ -16,6 +17,7 @@ export class CarComponent implements OnInit {
   dataLoaded = false;
   images: CarImage[] = [];
   carFilter = "";
+  baseImagePath = environment.baseUrl;
   constructor(private carService: CarService, private imageService: CarImageService, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -28,7 +30,8 @@ export class CarComponent implements OnInit {
         return this.getCarsByColor(params["colorId"]);
       }
       else {
-        return this.getCars();
+        this.getImages();
+        this.getCars();
       }
     })
   }
@@ -41,9 +44,18 @@ export class CarComponent implements OnInit {
     });
   }
   getImagesByCar(carId: number) {
-    this.imageService.getImagesByCar(carId).subscribe((response) => {
+    for (let i = 0; i < this.images.length; i++) {
+      if (this.images[i].carId == carId) {
+        return this.images[i].imagePath;
+      }
+
+    }
+    return "default.jpg";
+  }
+  getImages() {
+    this.imageService.getImages().subscribe((response) => {
       this.images = response.data;
-    })
+    });
   }
 
   getCarsByColor(colorId: number) {
