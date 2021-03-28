@@ -1,29 +1,26 @@
-<ul class="list-group list-group-flush">
-  <li class="list-group-item list-group-item-info">Brands</li>
+<form>
   <div class="mb-3">
-    <label for="exampleFormControlInput1" class="form-label"></label>
-    <input
-      type="text"
-      [(ngModel)]="filterText"
-      class="form-control"
-      id="filterText"
-      placeholder="Enter a Brand"
-    />
+    <span class="d-block p-2 bg-dark text-white">Brands</span>
+    <div
+      *ngIf="dataLoaded == false"
+      class="spinner-border text-primary"
+      role="status"
+    >
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <select
+      (change)="setCurrentBrand()"
+      [(ngModel)]="currentBrand"
+      name="brandSelect"
+      class="form-select"
+      aria-label="Brands"
+    >
+      <option [ngValue]="allBrand" [selected]="allBrandSelected()">
+        All Brands
+      </option>
+      <option [ngValue]="brand" *ngFor="let brand of brands">
+        {{ brand.brandName }}
+      </option>
+    </select>
   </div>
-  <div *ngIf="filterText.length > 2" class="alert alert-success">
-    {{ filterText }} searching...
-  </div>
-
-  <li routerLink="/cars">All Brands</li>
-  <li
-    *ngFor="let brand of brands | filterBrand: filterText"
-    (click)="setCurrentBrand(brand)"
-    routerLink="/cars/brand/{{ brand.brandId }}"
-    [class]="getCurrentBrand(brand)"
-  >
-    {{ brand.brandName }}
-  </li>
-</ul>
-<br />
-<hr />
-<br />
+</form>
