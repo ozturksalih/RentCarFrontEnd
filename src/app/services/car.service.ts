@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ListResponseModel } from '../models/listResponseModel';
 import { Car } from '../models/car';
+import { ResponseModel } from '../models/responseModel';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,16 @@ export class CarService {
   apiUrl = "https://localhost:44314/api/";
 
   constructor(private httpClient: HttpClient) { }
+
+  deleteCar(car: Car): Observable<ResponseModel> {
+    let newPath = this.apiUrl + "cars/delete";
+    return this.httpClient.delete<ResponseModel>(newPath);
+  }
+
+  updateCar(car: Car): Observable<ResponseModel> {
+    let newPath = this.apiUrl + "cars/update";
+    return this.httpClient.put<ResponseModel>(newPath, car);
+  }
 
   getCars(): Observable<ListResponseModel<Car>> {
     let newPath = this.apiUrl + "cars/getcardetail";

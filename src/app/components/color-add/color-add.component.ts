@@ -1,0 +1,52 @@
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { ColorService } from 'src/app/services/color.service';
+
+@Component({
+  selector: 'app-color-add',
+  templateUrl: './color-add.component.html',
+  styleUrls: ['./color-add.component.css']
+})
+export class ColorAddComponent implements OnInit {
+
+  colorAddForm: FormGroup;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private colorService: ColorService,
+    private toastrService: ToastrService
+  ) { }
+
+  ngOnInit(): void {
+    this.createColorAddForm();
+  }
+
+  createColorAddForm() {
+    this.colorAddForm = this.formBuilder.group({
+      colorName: ["", Validators.required]
+    })
+  }
+  add() {
+    if (this.colorAddForm.valid) {
+      let colorModel = Object.assign({}, this.colorAddForm.value);
+      this.colorService.add(colorModel).subscribe((response) => {
+        this.toastrService.success(response.message, "Succed")
+      }, (responseError) => {
+
+        if (responseError.error.message && responseError.error.message.length > 0) {
+          this.toastrService.error(responseError.error.message);
+        }
+        else if (responseError.error.Errors.length > 0 && responseError.error.Errors[0].ErrorMessage) {
+
+          for (let i = 0; i < responseError.error.Errors.length; i++) {
+            this.toastrService.error(responseError.error.Errors[i].ErrorMessage, "ValidationFailure");
+          }
+        }
+      });
+    } else {
+      this.toastrService.error("There is missing item in the form", "Error!")
+    }
+  }
+
+}
