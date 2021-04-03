@@ -3,7 +3,71 @@
     <div class="card">
       <div class="card-header"><h5 class="title">Add Color</h5></div>
       <div class="card-body">
-        <form [formGroup]="colorAddForm">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="row">#</th>
+              <td scope="row">Brand Name</td>
+              <td scope="row">Options</td>
+              <td>
+                <button
+                  data-bs-toggle="modal"
+                  data-bs-target="#colorAddModal"
+                  class="btn btn-dark"
+                >
+                  Add Color<i
+                    class="bi bi-plus-circle-fill float-right"
+                    style="font-size: 1rem; text-align-last: right"
+                  ></i>
+                </button>
+              </td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let color of colors">
+              <th>{{ color.colorId }}</th>
+              <td>{{ color.colorName }}</td>
+              <td>
+                <i class="bi bi-trash"></i>
+                {{ space }}
+                <i
+                  (click)="this.getUpdateModal(color)"
+                  data-bs-toggle="modal"
+                  data-bs-target="#colorUpdateModal"
+                  class="bi bi-sliders"
+                ></i>
+              </td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Color Add Modal-->
+<div
+  class="modal fade"
+  id="colorAddModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  data-bs-backdrop="static"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Color</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="colorEditForm.reset()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="colorEditForm">
           <div class="mb3">
             <label for="colorName">Color</label>
             <div class="form-group">
@@ -18,8 +82,94 @@
           </div>
         </form>
       </div>
-      <div class="card-footer">
-        <button class="btn btn-fill btn-dark" (click)="add()">Add</button>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          (click)="colorEditForm.reset()"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="add(); this.colorEditForm.reset()"
+        >
+          Add
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Color Update Modal-->
+<div
+  class="modal fade"
+  id="colorUpdateModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  data-bs-backdrop="static"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Update Color</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="colorEditForm.reset()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="colorEditForm">
+          <div class="mb3">
+            <div class="row">
+              <div class="col-md-4">
+                <label for="colorId">#</label>
+                <div class="form-group">
+                  <input
+                    type="number"
+                    id="colorId"
+                    formControlName="colorId"
+                    class="form-control"
+                    readonly
+                  />
+                </div>
+              </div>
+              <div class="col-md-8">
+                <label for="colorName">Color</label>
+                <div class="form-group">
+                  <input
+                    type="text"
+                    id="colorName"
+                    formControlName="colorName"
+                    class="form-control"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          (click)="colorEditForm.reset()"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="updateColor(); this.colorEditForm.reset()"
+        >
+          Update
+        </button>
       </div>
     </div>
   </div>

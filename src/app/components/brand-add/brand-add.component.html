@@ -2,12 +2,85 @@
   <div class="col-md-12">
     <div class="card">
       <div class="card-header">
-        <h5 class="title">Add Brand</h5>
+        <h5 class="title">Brands</h5>
       </div>
       <div class="card-body">
-        <form [formGroup]="brandAddForm">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="row">#</th>
+              <th scope="row">Brand Name</th>
+              <th>
+                Options
+                {{ space }}
+              </th>
+              <th>
+                <button
+                  class="btn btn-dark"
+                  data-bs-toggle="modal"
+                  data-bs-target="#brandAddModal"
+                >
+                  Add Brand
+                  <i
+                    class="bi bi-plus-circle-fill float-right"
+                    style="font-size: 1rem; text-align-last: right"
+                    d
+                  ></i>
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let brand of brands">
+              <th>{{ brand.brandId }}</th>
+              <td>{{ brand.brandName }}</td>
+              <td>
+                <i class="bi bi-trash"></i>
+                {{ space }}
+
+                <i
+                  (click)="this.getUpdateModel(brand)"
+                  data-bs-toggle="modal"
+                  data-bs-target="#brandUpdateModal"
+                  class="bi bi-sliders"
+                ></i>
+              </td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-fill btn-dark" (click)="add()">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Brand Add Modal--->
+<div
+  class="modal fade"
+  id="brandAddModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  data-bs-backdrop="static"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Brand Add</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="brandEditForm.reset()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="brandEditForm">
           <div class="mb3">
-            <label for="brandName">Brand Name</label>
+            <label for="brandName">Add Brand</label>
             <div class="form-group">
               <input
                 type="text"
@@ -20,8 +93,91 @@
           </div>
         </form>
       </div>
-      <div class="card-footer">
-        <button class="btn btn-fill btn-dark" (click)="add()">Add</button>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          (click)="brandEditForm.reset()"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="add(); this.brandEditForm.reset()"
+        >
+          Add
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--brand Update Modal--->
+<div
+  class="modal fade"
+  id="brandUpdateModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  data-bs-backdrop="static"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Brand Update</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="brandEditForm.reset()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="brandEditForm">
+          <div class="mb3">
+            <label for="brandName">Update Brand</label>
+            <div class="form-group">
+              <div class="row">
+                <div class="col-md-4">
+                  <input
+                    type="number"
+                    id="brandId"
+                    formControlName="brandId"
+                    class="form-control"
+                    readonly
+                  />
+                </div>
+                <div class="col-md-8">
+                  <input
+                    type="text"
+                    id="brandName"
+                    class="form-control"
+                    formControlName="brandName"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          (click)="brandEditForm.reset()"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="updateBrand(); this.brandEditForm.reset()"
+        >
+          Update
+        </button>
       </div>
     </div>
   </div>

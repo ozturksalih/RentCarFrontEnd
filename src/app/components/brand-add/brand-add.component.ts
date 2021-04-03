@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { Brand } from 'src/app/models/brand';
 import { BrandService } from 'src/app/services/brand.service';
 
 @Component({
@@ -10,7 +11,10 @@ import { BrandService } from 'src/app/services/brand.service';
 })
 export class BrandAddComponent implements OnInit {
 
-  brandAddForm: FormGroup;
+  brandEditForm: FormGroup;
+  brands: Brand[] = [];
+  dataLoaded = false;
+  space = " ";
 
   constructor(
     private formBuilder: FormBuilder,
@@ -21,16 +25,49 @@ export class BrandAddComponent implements OnInit {
 
   ngOnInit(): void {
     this.createBrandAddForm();
+    this.getBrands();
+  }
+  getBrands() {
+    this.brandService.getBrands().subscribe((response) => {
+      this.brands = response.data;
+      this.dataLoaded = true;
+    })
+  }
+  updateBrand() {
+    if (this.brandEditForm.valid) {
+      let brandModel = Object.assign({}, this.brandEditForm.value);
+      console.log(brandModel);
+      this.brandService.update(brandModel).subscribe(
+        (response) => {
+          this.toastrService.success(response.message, "Succeed")
+        },
+        (responseError) => {
+          this.toastrService.error("Api Error");
+        }
+      )
+    } else {
+      this.toastrService.error("Form Error");
+    }
+  }
+  getUpdateModel(brand: Brand) {
+    this.brandEditForm.setValue({
+      brandId: brand.brandId,
+      brandName: brand.brandName
+    })
+
   }
 
   createBrandAddForm() {
-    this.brandAddForm = this.formBuilder.group({
+    this.brandEditForm = this.formBuilder.group({
+      brandId: [""],
       brandName: ["", Validators.required]
     })
   }
   add() {
-    if (this.brandAddForm.valid) {
-      let brandModel = Object.assign({}, this.brandAddForm.value);
+    if (this.brandEditForm.valid) {
+      this.brandEditForm.removeControl("brandId");
+      let brandModel = Object.assign({}, this.brandEditForm.value);
+      console.log(brandModel);
       this.brandService.add(brandModel).subscribe((response) => {
         this.toastrService.success(response.message, "Succeed");
       },

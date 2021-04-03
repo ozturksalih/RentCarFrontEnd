@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { Color } from 'src/app/models/color';
 import { ColorService } from 'src/app/services/color.service';
 
 @Component({
@@ -10,7 +11,10 @@ import { ColorService } from 'src/app/services/color.service';
 })
 export class ColorAddComponent implements OnInit {
 
-  colorAddForm: FormGroup;
+  colorEditForm: FormGroup;
+  colors: Color[] = [];
+  dataLoaded = false;
+  space = " ";
 
   constructor(
     private formBuilder: FormBuilder,
@@ -19,21 +23,53 @@ export class ColorAddComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.createColorAddForm();
+    this.createColorEditForm();
+    this.getColors();
   }
 
-  createColorAddForm() {
-    this.colorAddForm = this.formBuilder.group({
+  getColors() {
+    this.colorService.getColors().subscribe(
+      (response) => {
+        this.colors = response.data;
+        this.dataLoaded = true;
+      }
+    )
+  }
+  createColorEditForm() {
+    this.colorEditForm = this.formBuilder.group({
+      colorId: [""],
       colorName: ["", Validators.required]
     })
   }
+  getUpdateModal(color: Color) {
+    this.colorEditForm.setValue({
+      colorId: color.colorId,
+      colorName: color.colorName
+    })
+  }
+  updateColor() {
+    if (this.colorEditForm.valid) {
+      let colorModel = Object.assign({}, this.colorEditForm.value);
+      console.log(colorModel);
+      this.colorService.update(colorModel).subscribe(
+        (response) => {
+          this.toastrService.success(response.message, "Succedd");
+        }, (responseError) => {
+          this.toastrService.error("Api Error")
+        }
+      )
+    } else {
+      this.toastrService.error("Form Error");
+    }
+  }
   add() {
-    if (this.colorAddForm.valid) {
-      let colorModel = Object.assign({}, this.colorAddForm.value);
+    if (this.colorEditForm.valid) {
+      this.colorEditForm.removeControl("colorId");
+      let colorModel = Object.assign({}, this.colorEditForm.value);
       this.colorService.add(colorModel).subscribe((response) => {
         this.toastrService.success(response.message, "Succed")
       }, (responseError) => {
-
+        console.log(responseError);
         if (responseError.error.message && responseError.error.message.length > 0) {
           this.toastrService.error(responseError.error.message);
         }

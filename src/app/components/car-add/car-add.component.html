@@ -1,6 +1,12 @@
+<div *ngIf="dataLoaded == false" class="spinner-border text-dark" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
+
 <div class="content">
   <div class="card">
-    <div class="card-header"><h5 class="title">Car Management</h5></div>
+    <div class="card-header">
+      <h5 class="title">Car Management</h5>
+    </div>
     <div class="card-body">
       <table class="table table-striped table-hover">
         <thead>
@@ -11,8 +17,7 @@
             <th scope="col">Transmission</th>
             <th scope="col">Color</th>
             <th scope="col">Daily Price</th>
-            <th scope="col">Change</th>
-            <th></th>
+            <th scope="col">Options</th>
           </tr>
         </thead>
         <tbody>
@@ -32,14 +37,225 @@
               <i (click)="delete(car.carId)" class="bi bi-trash"></i>
               {{ space }}
               <i
-                (click)="update(car)"
-                routerLink="/cars/update/{{ car.carId }}"
+                (click)="getUpdateModel(car)"
+                data-bs-toggle="modal"
+                data-bs-target="#carUpdateModal"
                 class="bi bi-sliders"
               ></i>
             </td>
           </tr>
         </tbody>
       </table>
+    </div>
+    <div class="card-footer">
+      <button
+        class="btn btn-dark"
+        data-bs-toggle="modal"
+        data-bs-target="#carAddModal"
+      >
+        Add New Car
+        <i
+          class="bi bi-plus-circle-fill float-right"
+          style="font-size: 1rem; text-align-last: right"
+        ></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!--  Update Model -->
+<div
+  class="modal fade"
+  id="carUpdateModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  data-bs-backdrop="static"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Update Car Informations
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="carEditForm.reset()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="carEditForm">
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-default"
+              >Model</span
+            >
+            <input
+              type="text"
+              class="form-control"
+              formControlName="description"
+            />
+          </div>
+          <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01"
+              >Brands</label
+            >
+            <select class="form-select" formControlName="brandId">
+              <option *ngFor="let brand of brands" [value]="brand.brandId">
+                {{ brand.brandName }}
+              </option>
+            </select>
+          </div>
+          <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01"
+              >Colors</label
+            >
+            <select class="form-select" formControlName="colorId">
+              <option *ngFor="let color of colors" [value]="color.colorId">
+                {{ color.colorName }}
+              </option>
+            </select>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-default"
+              >Model Year</span
+            >
+            <input
+              type="text"
+              class="form-control"
+              formControlName="modelYear"
+              placeholder="Enter Car Model Year"
+            />
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-default"
+              >Daily Price</span
+            >
+            <input
+              type="number"
+              class="form-control"
+              formControlName="dailyPrice"
+              placeholder="Enter Daily Price"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          (click)="carEditForm.reset()"
+        >
+          Close
+        </button>
+        <button type="button" class="btn btn-primary" (click)="updateCar()">
+          Save changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Car Add Modal--->
+<div
+  class="modal fade"
+  id="carAddModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  data-bs-backdrop="static"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Car Informations</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="carEditForm.reset()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="carEditForm">
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-default"
+              >Model</span
+            >
+            <input
+              type="text"
+              class="form-control"
+              formControlName="description"
+              placeholder="Enter Car Model"
+            />
+          </div>
+          <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01"
+              >Brands</label
+            >
+            <select class="form-select" formControlName="brandId">
+              <option
+                type="number"
+                *ngFor="let brand of brands"
+                value="{{ brand.brandId }}"
+              >
+                {{ brand.brandName }}
+              </option>
+            </select>
+          </div>
+          <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01"
+              >Colors</label
+            >
+            <select class="form-select" formControlName="colorId">
+              <option *ngFor="let color of colors" [value]="color.colorId">
+                {{ color.colorName }}
+              </option>
+            </select>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-default"
+              >Model Year</span
+            >
+            <input
+              type="text"
+              class="form-control"
+              formControlName="modelYear"
+              placeholder="Enter Car Model Year"
+            />
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-default"
+              >Daily Price</span
+            >
+            <input
+              type="number"
+              class="form-control"
+              formControlName="dailyPrice"
+              placeholder="Enter Daily Price"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          (click)="carEditForm.reset()"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="addCar(); this.carEditForm.reset()"
+        >
+          Add New Car
+        </button>
+      </div>
     </div>
   </div>
 </div>
