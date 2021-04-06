@@ -54,6 +54,8 @@ export class ColorAddComponent implements OnInit {
       this.colorService.update(colorModel).subscribe(
         (response) => {
           this.toastrService.success(response.message, "Succedd");
+          this.colorEditForm.reset();
+          location.reload();
         }, (responseError) => {
           this.toastrService.error("Api Error")
         }
@@ -67,7 +69,9 @@ export class ColorAddComponent implements OnInit {
       this.colorEditForm.removeControl("colorId");
       let colorModel = Object.assign({}, this.colorEditForm.value);
       this.colorService.add(colorModel).subscribe((response) => {
-        this.toastrService.success(response.message, "Succed")
+        this.toastrService.success(response.message, "Succed");
+        this.colorEditForm.reset();
+        location.reload();
       }, (responseError) => {
         console.log(responseError);
         if (responseError.error.message && responseError.error.message.length > 0) {
@@ -84,5 +88,18 @@ export class ColorAddComponent implements OnInit {
       this.toastrService.error("There is missing item in the form", "Error!")
     }
   }
+
+  delete() {
+    let colorModel = Object.assign({}, this.colorEditForm.value);
+    this.colorService.delete(colorModel).subscribe((response) => {
+      this.toastrService.success(response.message);
+      this.colorEditForm.reset();
+      location.reload();
+    }, (responseError) => {
+      this.toastrService.error("Api error");
+    })
+  }
+
+
 
 }

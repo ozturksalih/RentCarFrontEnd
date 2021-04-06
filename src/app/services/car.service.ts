@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ListResponseModel } from '../models/listResponseModel';
 import { Car } from '../models/car';
@@ -49,5 +49,13 @@ export class CarService {
   getCarsByBrandAndColor(brandId: number, colorId: number): Observable<ListResponseModel<Car>> {
     let newPath = this.apiUrl + 'cars/getcarsbybrandandcolor?brandId=' + brandId + '&colorId=' + colorId;
     return this.httpClient.get<ListResponseModel<Car>>(newPath);
+  }
+
+  delete(car: Car): Observable<ResponseModel> {
+    let newPath = this.apiUrl + "cars/delete";
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }), body: car
+    };
+    return this.httpClient.delete<ResponseModel>(newPath, httpOptions);
   }
 }

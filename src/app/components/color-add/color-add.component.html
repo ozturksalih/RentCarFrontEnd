@@ -28,7 +28,12 @@
               <th>{{ color.colorId }}</th>
               <td>{{ color.colorName }}</td>
               <td>
-                <i class="bi bi-trash"></i>
+                <i
+                  data-bs-toggle="modal"
+                  data-bs-target="#colorDeleteModal"
+                  (click)="this.getUpdateModal(color)"
+                  class="bi bi-trash"
+                ></i>
                 {{ space }}
                 <i
                   (click)="this.getUpdateModal(color)"
@@ -41,6 +46,78 @@
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!--color delete modal-->
+<div
+  class="modal fade"
+  id="colorDeleteModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  data-bs-backdrop="static"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete Color</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="colorEditForm.reset()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="colorEditForm">
+          <div class="mb3">
+            <div class="row">
+              <div class="col-md-4">
+                <label for="colorId">#</label>
+                <div class="form-group">
+                  <input
+                    type="number"
+                    id="colorId"
+                    formControlName="colorId"
+                    class="form-control"
+                    readonly
+                  />
+                </div>
+              </div>
+              <div class="col-md-8">
+                <label for="colorName">Color</label>
+                <div class="form-group">
+                  <input
+                    type="text"
+                    id="colorName"
+                    formControlName="colorName"
+                    class="form-control"
+                    readonly
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          (click)="colorEditForm.reset()"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="delete(); this.colorEditForm.reset()"
+        >
+          Delete
+        </button>
       </div>
     </div>
   </div>

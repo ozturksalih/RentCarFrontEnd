@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Color } from '../models/color';
@@ -23,5 +23,12 @@ export class ColorService {
   update(color: Color): Observable<ResponseModel> {
     let newPath = this.apiUrl + "colors/update";
     return this.httpClient.put<ResponseModel>(newPath, color);
+  }
+  delete(color: Color): Observable<ResponseModel> {
+    let newPath = this.apiUrl + "colors/delete";
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }), body: color
+    };
+    return this.httpClient.delete<ResponseModel>(newPath, httpOptions);
   }
 }

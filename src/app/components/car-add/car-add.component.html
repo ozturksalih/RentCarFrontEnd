@@ -34,7 +34,12 @@
                 class="bi bi-info-circle"
               ></i>
               {{ space }}
-              <i (click)="delete(car.carId)" class="bi bi-trash"></i>
+              <i
+                (click)="getUpdateModel(car)"
+                data-bs-toggle="modal"
+                data-bs-target="#carDeleteModal"
+                class="bi bi-trash"
+              ></i>
               {{ space }}
               <i
                 (click)="getUpdateModel(car)"
@@ -254,6 +259,47 @@
           (click)="addCar(); this.carEditForm.reset()"
         >
           Add New Car
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--delete modal-->
+
+<div
+  class="modal fade"
+  id="carDeleteModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  data-bs-backdrop="static"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="carEditForm.reset()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <label for="">Are you Sure?</label>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          (click)="carEditForm.reset()"
+        >
+          Close
+        </button>
+        <button type="button" class="btn btn-primary" (click)="delete()">
+          Save changes
         </button>
       </div>
     </div>

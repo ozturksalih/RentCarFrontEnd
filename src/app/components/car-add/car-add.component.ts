@@ -59,9 +59,7 @@ export class CarAddComponent implements OnInit {
         this.dataLoaded = true
     })
   }
-  delete(carId: number) {
-    console.log(carId);
-  }
+
   getByCarId(carId: number) {
     this.carService.getCarByCarId(carId).subscribe((response) => {
       this.car = response.data[0];
@@ -134,6 +132,16 @@ export class CarAddComponent implements OnInit {
     } else {
       this.toastrService.error("Fill the form!", "Form Error");
     }
+  }
+  delete() {
+    let carModel = Object.assign({}, this.carEditForm.value);
+    this.carService.delete(carModel).subscribe((response) => {
+      this.toastrService.success(response.message);
+      this.carEditForm.reset();
+      location.reload();
+    }, (responseError) => {
+      this.toastrService.error("Api error");
+    })
   }
 
 }

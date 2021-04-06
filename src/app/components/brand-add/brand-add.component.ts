@@ -39,7 +39,9 @@ export class BrandAddComponent implements OnInit {
       console.log(brandModel);
       this.brandService.update(brandModel).subscribe(
         (response) => {
-          this.toastrService.success(response.message, "Succeed")
+          this.toastrService.success(response.message, "Succeed");
+          this.brandEditForm.reset();
+          location.reload();
         },
         (responseError) => {
           this.toastrService.error("Api Error");
@@ -67,9 +69,11 @@ export class BrandAddComponent implements OnInit {
     if (this.brandEditForm.valid) {
       this.brandEditForm.removeControl("brandId");
       let brandModel = Object.assign({}, this.brandEditForm.value);
-      console.log(brandModel);
+
       this.brandService.add(brandModel).subscribe((response) => {
         this.toastrService.success(response.message, "Succeed");
+        this.brandEditForm.reset();
+        location.reload();
       },
 
         (responseError) => {
@@ -92,8 +96,17 @@ export class BrandAddComponent implements OnInit {
     } else {
       this.toastrService.error("There is a missing item in the form.", "Error!");
     }
+  }
 
-
+  delete() {
+    let brandModel = Object.assign({}, this.brandEditForm.value);
+    this.brandService.delete(brandModel).subscribe((response) => {
+      this.toastrService.success(response.message, "Succeed");
+      this.brandEditForm.reset();
+      location.reload();
+    }, (responseError) => {
+      this.toastrService.error("Api error");
+    })
   }
 
 }

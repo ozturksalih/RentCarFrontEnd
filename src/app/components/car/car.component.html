@@ -46,26 +46,3 @@
     </div>
   </div>
 </div>
-
-<table *ngIf="dataLoaded != false" class="table">
-  <thead>
-    <tr>
-      <th>Id</th>
-      <th>BrandId</th>
-      <th>ColorId</th>
-      <th>Available</th>
-      <th>ModelYear</th>
-      <th>DailyPrice</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tr *ngFor="let car of cars">
-    <td>{{ car.carId }}</td>
-    <td>{{ car.brandName }}</td>
-    <td>{{ car.description }}</td>
-    <td>{{ car.colorName }}</td>
-    <td>{{ car.available }}</td>
-    <td>{{ car.modelYear }}</td>
-    <td>{{ car.dailyPrice }}</td>
-  </tr>
-</table>

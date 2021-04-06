@@ -35,7 +35,12 @@
               <th>{{ brand.brandId }}</th>
               <td>{{ brand.brandName }}</td>
               <td>
-                <i class="bi bi-trash"></i>
+                <i
+                  (click)="this.getUpdateModel(brand)"
+                  data-bs-toggle="modal"
+                  data-bs-target="#brandDeleteModal"
+                  class="bi bi-trash"
+                ></i>
                 {{ space }}
 
                 <i
@@ -50,9 +55,7 @@
           </tbody>
         </table>
       </div>
-      <div class="card-footer">
-        <button class="btn btn-fill btn-dark" (click)="add()">Add</button>
-      </div>
+      <div class="card-footer"></div>
     </div>
   </div>
 </div>
@@ -177,6 +180,75 @@
           (click)="updateBrand(); this.brandEditForm.reset()"
         >
           Update
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--delete modal-->
+<div
+  class="modal fade"
+  id="brandDeleteModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  data-bs-backdrop="static"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete Brand</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="brandEditForm.reset()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="brandEditForm">
+          <div class="mb3">
+            <label for="brandName">Update Brand</label>
+            <div class="form-group">
+              <div class="row">
+                <div class="col-md-4">
+                  <input
+                    type="number"
+                    id="brandId"
+                    formControlName="brandId"
+                    class="form-control"
+                    readonly
+                  />
+                </div>
+                <div class="col-md-8">
+                  <input
+                    type="text"
+                    id="brandName"
+                    class="form-control"
+                    formControlName="brandName"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          (click)="brandEditForm.reset()"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="delete(); this.brandEditForm.reset()"
+        >
+          Delete
         </button>
       </div>
     </div>
