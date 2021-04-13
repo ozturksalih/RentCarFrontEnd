@@ -19,7 +19,7 @@
   {{ carFilter }} searching...
 </div>
 <div class="row" *ngIf="dataLoaded != false">
-  <div *ngFor="let car of cars" class="card" style="width: 17rem">
+  <div *ngFor="let car of cars" class="card me-1 mb-1" style="width: 16rem">
     <img
       src="{{ baseImagePath }}{{ getImagesByCar(car.carId) }}"
       class="card-img-top"

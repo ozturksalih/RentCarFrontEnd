@@ -20,38 +20,13 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Link</a>
         </li>
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            id="navbarDropdown"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            Dropdown
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider" /></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link disabled"
-            href="#"
-            tabindex="-1"
-            aria-disabled="true"
-            >Disabled</a
-          >
-        </li>
       </ul>
-      <div class="nav-item dropdown">
+      <div
+        *ngIf="checkToLogin() == true && dataLoaded == true"
+        class="nav-item dropdown"
+      >
         <a
           class="nav-link dropdown-toggle me-3"
-          href="#"
           id="navbarDropdown"
           role="button"
           data-bs-toggle="dropdown"
@@ -64,31 +39,56 @@
             <a class="dropdown-item" routerLink="/cars/add">Car Management</a>
           </li>
           <li>
-            <a class="dropdown-item" href="/brands/add">Brand Management</a>
+            <a class="dropdown-item" routerLink="/brands/add"
+              >Brand Management</a
+            >
           </li>
           <li>
-            <a class="dropdown-item" href="/colors/add">Color Management</a>
+            <a class="dropdown-item" routerLink="/colors/add"
+              >Color Management</a
+            >
           </li>
         </ul>
       </div>
-
-      <form class="d-flex">
-        <button
-          routerLink="/register"
-          class="btn btn-sm btn-danger me-3"
-          type="button"
+      <div
+        *ngIf="checkToLogin() == true && dataLoaded == true"
+        class="nav-item dropdown"
+      >
+        <a
+          class="btn btn-success dropdown-toggle me-3"
+          role="button"
+          id="dropdownMenuLink"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+          >{{ user.firstName }} {{ user.lastName }}</a
         >
-          Register
-          <i class="bi bi-person-plus-fill"></i>
-        </button>
-        <button
-          routerLink="/login"
-          class="btn btn-outline-success"
-          type="button"
-        >
-          Login<i class="bi bi-box-arrow-in-right"></i>
-        </button>
-      </form>
+        <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+          <li><a class="dropdown-item" routerLink="profile">Settings</a></li>
+          <li><hr class="dropdown-divider" /></li>
+          <li>
+            <a (click)="logOut()" class="dropdown-item">Sign Out</a>
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="checkToLogin() == false">
+        <form class="d-flex">
+          <button
+            routerLink="/register"
+            class="btn btn-sm btn-danger me-3"
+            type="button"
+          >
+            Register
+            <i class="bi bi-person-plus-fill"></i>
+          </button>
+          <button
+            routerLink="/login"
+            class="btn btn-outline-success"
+            type="button"
+          >
+            Login<i class="bi bi-box-arrow-in-right"></i>
+          </button>
+        </form>
+      </div>
     </div>
   </div>
 </nav>

@@ -68,46 +68,82 @@
           <th scope="row">Transmission</th>
           <td>{{ car.carId }}</td>
         </tr>
-        <tr>
-          <th scope="row">Rent Date</th>
-          <td>
-            <input
-              [(ngModel)]="rentDate"
-              class="form-control"
-              (change)="calculateDifference()"
-              type="datetime-local"
-              required
-            />
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">Return Date</th>
-          <td>
-            <input
-              [(ngModel)]="returnDate"
-              class="form-control"
-              (change)="calculateDifference()"
-              type="datetime-local"
-              required
-            />
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">Total Price</th>
-          <td *ngIf="givenFullDate">
-            {{ car.dailyPrice * calculateDifference() | currency }}
-          </td>
-        </tr>
       </tbody>
     </table>
     <div class="card-body d-grid gap-2 mx-auto">
       <div class="btn-group me-2">
         <button
           type="button"
-          (click)="checkParameters()"
+          data-bs-toggle="modal"
+          data-bs-target="#datesModel"
           class="btn btn-dark text-center"
         >
           Rent
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Rent Dates Model-->
+
+<div
+  class="modal fade"
+  id="datesModel"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  data-bs-backdrop="static"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Please Select dates you want to rent car
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="rentalForm.reset()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="rentalForm">
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-default"
+              >Rent Date</span
+            >
+            <input
+              formControlName="rentalDate"
+              class="form-control"
+              type="date"
+              required
+            />
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-default"
+              >Return Date</span
+            >
+            <input
+              formControlName="returnDate"
+              class="form-control"
+              type="date"
+              required
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button
+          (click)="checkCarAvailability()"
+          type="button"
+          class="btn btn-primary"
+        >
+          Save changes
         </button>
       </div>
     </div>

@@ -1,13 +1,7 @@
 <form>
   <div class="mb-3">
     <span class="d-block p-2 bg-dark text-white">Brands</span>
-    <div
-      *ngIf="dataLoaded == false"
-      class="spinner-border text-primary"
-      role="status"
-    >
-      <span class="visually-hidden">Loading...</span>
-    </div>
+    <app-spinner *ngIf="dataLoaded == false"></app-spinner>
     <select
       (change)="setCurrentBrand()"
       [(ngModel)]="currentBrand"

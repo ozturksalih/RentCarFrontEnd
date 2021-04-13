@@ -22,12 +22,12 @@ import { PaymentComponent } from './components/payment/payment.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { BrandAddComponent } from './components/brand-add/brand-add.component';
 import { ColorAddComponent } from './components/color-add/color-add.component';
-import { ManagementComponent } from './components/management/management.component';
 import { CarAddComponent } from './components/car-add/car-add.component';
 import { CarUpdateComponent } from './components/admin-settings/car/car-update/car-update.component';
 import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -47,11 +47,11 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     SidebarComponent,
     BrandAddComponent,
     ColorAddComponent,
-    ManagementComponent,
     CarAddComponent,
     CarUpdateComponent,
     LoginComponent,
-    SignupComponent
+    SignupComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,

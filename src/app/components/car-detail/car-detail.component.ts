@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Car } from 'src/app/models/car';
 import { CarImage } from 'src/app/models/carImage';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Rental } from 'src/app/models/rental';
 import { CarImageService } from 'src/app/services/car-image.service';
 import { CarService } from 'src/app/services/car.service';
@@ -18,10 +19,11 @@ import { environment } from 'src/environments/environment';
 export class CarDetailComponent implements OnInit {
 
   car: Car;
-  day: number;
-  rentDate = Date;
-  returnDate = Date;
+  rentalForm: FormGroup;
   givenFullDate = false;
+  rentalData = false;
+  rentals: Rental[];
+  dataLoaded = false;
 
   TotalPrice: number;
 
@@ -31,6 +33,7 @@ export class CarDetailComponent implements OnInit {
 
 
   constructor(
+    private formBuilder: FormBuilder,
     private carService: CarService,
     private imageService: CarImageService,
     private activatedRoute: ActivatedRoute,
@@ -41,111 +44,117 @@ export class CarDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
-      console.log(params);
+
       if (params["carId"]) {
         this.getCarByCarId(params["carId"]);
         this.getCarImages(params["carId"]);
       }
+      this.createRentalForm();
+
+    })
+  }
+
+  createRentalForm() {
+    this.rentalForm = this.formBuilder.group({
+      carId: ['', Validators.required],
+      rentalDate: ['', Validators.required],
+      returnDate: ['', Validators.required]
     })
 
   }
+  checkCarAvailability() {
+    let rentDates = Object.assign({}, this.rentalForm.value);
+    this.rentalForm.setValue({
+      carId: this.car.carId,
+      rentalDate: rentDates.rentalDate,
+      returnDate: rentDates.returnDate
+    })
+    if (this.rentalForm.valid) {
+      let rentalModal = Object.assign({}, this.rentalForm.value);
+      console.log(rentalModal);
+      this.differenceDates();
+      this.checkAvailability();
+    } else {
+      this.toastrService.warning("Please enter the dates");
+    }
+  }
+
+
+  differenceDates() {
+    let dates = Object.assign({}, this.rentalForm.value);
+    let rentalDate = dates.rentalDate;
+    let returnDate = dates.returnDate;
+    if (rentalDate > returnDate) {
+      this.toastrService.warning("rent date return date dan buyuk olamaz");
+      return 0;
+    } else if (rentalDate == returnDate) {
+      this.toastrService.warning("return and rental cannot be same day");
+      return 0;
+    } else {
+      let rent = new Date(rentalDate);
+      rent.setDate(rent.getDate());
+      let retu = new Date(returnDate);
+      retu.setDate(retu.getDate());
+      let differenceInTime = retu.getTime() - rent.getTime();
+      let differenceInDays = Math.floor((differenceInTime) / (1000 * 3600 * 24));
+      this.toastrService.info("Checking the car availability...");
+      this.toastrService.info("Total Price: " + this.car.dailyPrice * differenceInDays + " $")
+      this.givenFullDate = true;
+      return differenceInDays;
+    }
+  }
+
+
   getCarByCarId(carId: number) {
     this.carService.getCarByCarId(carId).subscribe((response) => {
       this.car = response.data[0];
+      this.dataLoaded = true;
     })
   }
+
+
   getCarImages(carId: number) {
     this.imageService.getImagesByCar(carId).subscribe((response) => {
       this.carImages = response.data;
     });
   }
+
+
   getImagePath(carId: number) {
     let newPath = this.path + "getbycar?carId=" + carId;
     return newPath;
   }
-  calculateDifference() {
-    if (this.rentDate && this.returnDate) {
-      let returnDate = new Date(this.returnDate.toString())
-      let rentDate = new Date(this.rentDate.toString())
-      let endDay = Number.parseInt(returnDate.getDate().toString())
-      let endMonth = Number.parseInt(returnDate.getMonth().toString())
-      let endYear = Number.parseInt(returnDate.getFullYear().toString())
-      let startDay = Number.parseInt(rentDate.getDate().toString())
-      let startMonth = Number.parseInt(rentDate.getMonth().toString())
-      let startYear = Number.parseInt(rentDate.getFullYear().toString())
-      let result = ((endDay - startDay) + ((endMonth - startMonth) * 30) + ((endYear - startYear) * 365));
-      this.givenFullDate = true;
-      if (result <= 0) {
-        return 0;
+
+  getRentals() {
+    this.rentalService.getByCarId(this.car.carId).subscribe((response) => {
+      this.rentals = response.data,
+        this.rentalData = true;
+    }, (responseError) => {
+      this.toastrService.error("Couldn't get rentals from api!");
+    })
+  }
+
+  checkAvailability() {
+    this.getRentals();
+    setTimeout(() => {
+      if (this.rentalData) {
+
+        this.rentals.forEach(element => {
+          let dates = this.rentalForm.value;
+          if (element.returnDate == null) {
+            this.toastrService.warning("The car is not available yet ");
+          }
+          else if ((dates.rentalDate > element.rentDate && dates.returnDate > element.returnDate) || (dates.rentalDate < element.rentDate && dates.returnDate < element.returnDate)) {
+            this.toastrService.success("Car is avaible  you will directed to payment page");
+          }
+          else {
+            this.toastrService.warning("Car is not available please select other dates!")
+          }
+        });
       }
-      return result;
-    }
-    return 0;
-  }
-
-  checkDates() {
-    if (!this.givenFullDate) {
-      this.toastrService.warning("Please enter Rent and Return Dates!");
-      return;
-    }
-    else if (this.returnDate < this.rentDate) {
-      this.toastrService.error("The return date cannot be before the rent date");
-      return;
-    }
-  }
-
-  checkParameters() {
-
-    if (!this.givenFullDate) {
-      this.toastrService.warning("Please enter Rent and Return Dates!");
-      return;
-    }
-    else if (this.returnDate < this.rentDate) {
-      this.toastrService.error("The return date cannot be before the rent date");
-      return;
-    } else if (this.returnDate === this.rentDate) {
-      this.toastrService.error("The return date and rent date cannot be same day");
-      return;
-    } else {
-      this.toastrService.info('Bilgileriniz kontrol ediliyor.');
-      // let carToRent: Rental = {
-      //   carId: this.car.carId,
-      //   rentDate: this.rentDate,
-      //   returnDate: this.returnDate
-      // }
-      // if (this.rentalService.checkAvailability(carToRent)) {
-      //   this.toastrService.success("You were redirected to the payment page.");
-      //   this.rentalService.setRental(carToRent);
-      //   this.router.navigate(["/rentals/rent/", this.car.carId]);
-
-      // } else {
-      //   this.toastrService.warning("The car is not available on the days you choose");
-      // }
-
-
-
-
-
-
-    }
+    },
+      1000);
 
   }
-
-
-  // getDiffBetweenDays(x: Date, y: Date) {
-  //   console.log(x);
-  //   console.log(y);
-
-  //   return Math.round((y.getTime() - x.getTime()) / (1000 * 60 * 60 * 24));
-
-
-  // }
-  // parse a date in yyyy-mm-dd format
-  // parseDate(input: string) {
-  // var parts = input.match(/(\d+)/g);
-  // new Date(year, month [, date [, hours[, minutes[, seconds[, ms]]]]])
-  // return new Date(parts[0], parts[1] - 1, parts[2]); // months are 0-based
-  // }
-
 
 }
