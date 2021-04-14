@@ -1,3 +1,5 @@
+declare var $: any;
+
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -9,6 +11,7 @@ import { CarImageService } from 'src/app/services/car-image.service';
 import { CarService } from 'src/app/services/car.service';
 import { RentalService } from 'src/app/services/rental.service';
 import { environment } from 'src/environments/environment';
+
 
 
 @Component({
@@ -24,8 +27,9 @@ export class CarDetailComponent implements OnInit {
   rentalData = false;
   rentals: Rental[];
   dataLoaded = false;
-
+  todayDate = new Date();
   TotalPrice: number;
+  rentalModel: Rental;
 
   baseImagePath = environment.baseUrl;
   path = "https://localhost:44314/api/carimages/";
@@ -40,7 +44,9 @@ export class CarDetailComponent implements OnInit {
     private toastrService: ToastrService,
     private router: Router,
     private rentalService: RentalService
-  ) { }
+  ) {
+
+  }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
@@ -57,7 +63,7 @@ export class CarDetailComponent implements OnInit {
   createRentalForm() {
     this.rentalForm = this.formBuilder.group({
       carId: ['', Validators.required],
-      rentalDate: ['', Validators.required],
+      rentDate: ['', Validators.required],
       returnDate: ['', Validators.required]
     })
 
@@ -66,7 +72,7 @@ export class CarDetailComponent implements OnInit {
     let rentDates = Object.assign({}, this.rentalForm.value);
     this.rentalForm.setValue({
       carId: this.car.carId,
-      rentalDate: rentDates.rentalDate,
+      rentDate: rentDates.rentDate,
       returnDate: rentDates.returnDate
     })
     if (this.rentalForm.valid) {
@@ -82,16 +88,21 @@ export class CarDetailComponent implements OnInit {
 
   differenceDates() {
     let dates = Object.assign({}, this.rentalForm.value);
-    let rentalDate = dates.rentalDate;
+    let rentDate = dates.rentDate;
     let returnDate = dates.returnDate;
-    if (rentalDate > returnDate) {
+
+    if (this.todayDate > rentDate) {
+      this.toastrService.warning("Rent date cannot be earlier than today!");
+      return 0;
+    }
+    if (rentDate > returnDate) {
       this.toastrService.warning("rent date return date dan buyuk olamaz");
       return 0;
-    } else if (rentalDate == returnDate) {
+    } else if (rentDate == returnDate) {
       this.toastrService.warning("return and rental cannot be same day");
       return 0;
     } else {
-      let rent = new Date(rentalDate);
+      let rent = new Date(rentDate);
       rent.setDate(rent.getDate());
       let retu = new Date(returnDate);
       retu.setDate(retu.getDate());
@@ -134,6 +145,12 @@ export class CarDetailComponent implements OnInit {
     })
   }
 
+
+  closeModal() {
+    $("#datesModel").modal("hide");
+  }
+
+
   checkAvailability() {
     this.getRentals();
     setTimeout(() => {
@@ -144,8 +161,14 @@ export class CarDetailComponent implements OnInit {
           if (element.returnDate == null) {
             this.toastrService.warning("The car is not available yet ");
           }
-          else if ((dates.rentalDate > element.rentDate && dates.returnDate > element.returnDate) || (dates.rentalDate < element.rentDate && dates.returnDate < element.returnDate)) {
-            this.toastrService.success("Car is avaible  you will directed to payment page");
+          else if ((dates.rentDate > element.rentDate && dates.returnDate > element.returnDate) || (dates.rentDate < element.rentDate && dates.returnDate < element.returnDate)) {
+            this.toastrService.success("You're directed to payment page");
+            this.closeModal();
+            this.rentalModel = this.rentalForm.value;
+            this.rentalModel.carId = this.car.carId;
+            this.rentalModel.totalPrice = this.differenceDates() * this.car.dailyPrice;
+            this.rentalService.carToRent = this.rentalModel;
+            this.router.navigate(['/rentals/rent/' + this.car.carId]);
           }
           else {
             this.toastrService.warning("Car is not available please select other dates!")

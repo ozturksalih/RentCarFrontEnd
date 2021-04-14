@@ -9,68 +9,36 @@
 <div class="row">
   <h5 class="card-header text-center">Recap</h5>
   <div class="col-md-7">
-    <div class="card">
-      <h5 class="card-header">Card Details</h5>
-
-      <div class="left border">
-        <form>
-          <span>Cardholder's name:</span>
-          <input class="form-control" placeholder="Linda Williams" />
-          <span>Card Number:</span>
-          <input class="form-control" placeholder="0125 6780 4567 9909" />
-          <div class="row">
-            <div class="col-4">
-              <span>Expiry date:</span>
-              <input class="form-control" placeholder="MM/YY" />
-            </div>
-            <div class="col-4">
-              <span>CVV:</span> <input class="form-control" />
-            </div>
-          </div>
-        </form>
-        <div class="row">
-          <div class="icons">
-            <img src="https://img.icons8.com/color/48/000000/visa.png" />
-            <img
-              src="https://img.icons8.com/color/48/000000/mastercard-logo.png"
-            />
-            <img src="https://img.icons8.com/color/48/000000/maestro.png" />
-          </div>
-        </div>
-      </div>
-      <div class="btn-group me-2">
-        <button type="button" class="btn btn-dark text-center">Rent</button>
-      </div>
-    </div>
+    <app-payment></app-payment>
   </div>
   <div class="col-md-5">
     <div class="card">
       <h5 class="card-header">Rental Details</h5>
       <div class="card-body">
-        <h5 class="card-title">Special title treatment</h5>
+        <h5 class="card-title">Check Your Details</h5>
 
         <table *ngIf="carDetail" class="table table-striped mt-2">
           <tbody>
             <tr>
               <th scope="row">Brand Model</th>
-              <td>{{ carToRent.carId }}</td>
+              <td>{{ carDetail.brandName }} {{ carDetail.description }}</td>
             </tr>
             <tr>
               <th scope="row">Model Year</th>
-              <td>Year</td>
+              <td>{{ carDetail.modelYear }}</td>
             </tr>
             <tr>
               <th scope="row">Rent - Return</th>
-              <td>rent -return</td>
+              <td>
+                {{ rentalDetail.rentDate }}->{{ rentalDetail.returnDate }}
+              </td>
             </tr>
             <tr>
               <th scope="row">Total Price:</th>
-              <td>totalPrice</td>
+              <td>{{ rentalDetail.totalPrice | currency }}</td>
             </tr>
           </tbody>
         </table>
-
-        <a href="#" class="btn btn-primary">Go somewhere</a>
       </div>
     </div>
   </div>

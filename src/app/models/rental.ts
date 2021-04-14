@@ -3,6 +3,7 @@ export interface Rental {
     carId: number;
     rentDate: Date;
     returnDate: Date;
+    totalPrice: number;
 
 
 }
