@@ -21,8 +21,7 @@ export class CarService {
 
   updateCar(car: Car): Observable<ResponseModel> {
     let newPath = this.apiUrl + "cars/update";
-    console.log(newPath);
-    console.log(car);
+
     return this.httpClient.put<ResponseModel>(newPath, car);
   }
 

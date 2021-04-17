@@ -11,6 +11,8 @@ import { CarImageService } from 'src/app/services/car-image.service';
 import { CarService } from 'src/app/services/car.service';
 import { RentalService } from 'src/app/services/rental.service';
 import { environment } from 'src/environments/environment';
+import { CustomerService } from 'src/app/services/customer.service';
+import { Customer } from 'src/app/models/customer';
 
 
 
@@ -22,8 +24,8 @@ import { environment } from 'src/environments/environment';
 export class CarDetailComponent implements OnInit {
 
   car: Car;
+  customer: Customer;
   rentalForm: FormGroup;
-  givenFullDate = false;
   rentalData = false;
   rentals: Rental[];
   dataLoaded = false;
@@ -43,10 +45,13 @@ export class CarDetailComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private toastrService: ToastrService,
     private router: Router,
-    private rentalService: RentalService
+    private rentalService: RentalService,
+    private customerService: CustomerService
   ) {
 
   }
+
+
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
@@ -60,61 +65,65 @@ export class CarDetailComponent implements OnInit {
     })
   }
 
+
+
   createRentalForm() {
     this.rentalForm = this.formBuilder.group({
       carId: ['', Validators.required],
+      customerId: ['', Validators.required],
       rentDate: ['', Validators.required],
       returnDate: ['', Validators.required]
     })
 
   }
+
   checkCarAvailability() {
     let rentDates = Object.assign({}, this.rentalForm.value);
     this.rentalForm.setValue({
       carId: this.car.carId,
+
       rentDate: rentDates.rentDate,
       returnDate: rentDates.returnDate
     })
     if (this.rentalForm.valid) {
-      let rentalModal = Object.assign({}, this.rentalForm.value);
-      console.log(rentalModal);
-      this.differenceDates();
-      this.checkAvailability();
+      let difference = this.differenceDates();
+      this.toastrService.info("Checking the car availability...");
+      if (difference == 0) {
+        this.toastrService.warning("Please try other dates")
+      } else if (difference >= 0) {
+        this.toastrService.info("The total price will " + this.priceCalculator() + " $");
+        this.checkAvailability();
+      }
+
     } else {
       this.toastrService.warning("Please enter the dates");
     }
   }
 
+  priceCalculator() {
+    return this.differenceDates() * this.car.dailyPrice;
+  }
 
   differenceDates() {
     let dates = Object.assign({}, this.rentalForm.value);
     let rentDate = dates.rentDate;
     let returnDate = dates.returnDate;
-
-    if (this.todayDate > rentDate) {
-      this.toastrService.warning("Rent date cannot be earlier than today!");
-      return 0;
-    }
-    if (rentDate > returnDate) {
-      this.toastrService.warning("rent date return date dan buyuk olamaz");
-      return 0;
-    } else if (rentDate == returnDate) {
-      this.toastrService.warning("return and rental cannot be same day");
+    if ((rentDate > returnDate) || (rentDate == returnDate) || (this.todayDate > rentDate)) {
       return 0;
     } else {
       let rent = new Date(rentDate);
       rent.setDate(rent.getDate());
       let retu = new Date(returnDate);
       retu.setDate(retu.getDate());
-      let differenceInTime = retu.getTime() - rent.getTime();
-      let differenceInDays = Math.floor((differenceInTime) / (1000 * 3600 * 24));
-      this.toastrService.info("Checking the car availability...");
-      this.toastrService.info("Total Price: " + this.car.dailyPrice * differenceInDays + " $")
-      this.givenFullDate = true;
-      return differenceInDays;
+      return this.dateCalculator(rent, retu);
     }
   }
 
+  dateCalculator(date1: Date, date2: Date) {
+    let differenceInTime = date2.getTime() - date1.getTime();
+    let differenceInDays = Math.floor((differenceInTime) / (1000 * 3600 * 24));
+    return differenceInDays;
+  }
 
   getCarByCarId(carId: number) {
     this.carService.getCarByCarId(carId).subscribe((response) => {
@@ -138,8 +147,11 @@ export class CarDetailComponent implements OnInit {
 
   getRentals() {
     this.rentalService.getByCarId(this.car.carId).subscribe((response) => {
-      this.rentals = response.data,
-        this.rentalData = true;
+
+      this.rentalData = true,
+
+        this.rentals = response.data
+
     }, (responseError) => {
       this.toastrService.error("Couldn't get rentals from api!");
     })
@@ -153,31 +165,43 @@ export class CarDetailComponent implements OnInit {
 
   checkAvailability() {
     this.getRentals();
-    setTimeout(() => {
-      if (this.rentalData) {
 
-        this.rentals.forEach(element => {
-          let dates = this.rentalForm.value;
-          if (element.returnDate == null) {
-            this.toastrService.warning("The car is not available yet ");
-          }
-          else if ((dates.rentDate > element.rentDate && dates.returnDate > element.returnDate) || (dates.rentDate < element.rentDate && dates.returnDate < element.returnDate)) {
-            this.toastrService.success("You're directed to payment page");
-            this.closeModal();
-            this.rentalModel = this.rentalForm.value;
-            this.rentalModel.carId = this.car.carId;
-            this.rentalModel.totalPrice = this.differenceDates() * this.car.dailyPrice;
-            this.rentalService.carToRent = this.rentalModel;
-            this.router.navigate(['/rentals/rent/' + this.car.carId]);
-          }
-          else {
-            this.toastrService.warning("Car is not available please select other dates!")
-          }
-        });
+    setTimeout(() => {
+
+      if (this.rentalData) {
+        if (this.rentals.length == 0) {
+          this.toastrService.success("You're directed to payment page");
+          this.directingToPayment();
+        } else {
+          this.rentals.forEach(element => {
+            let dates = this.rentalForm.value;
+            if (element.returnDate == null) {
+              this.toastrService.warning("The car is not available yet ");
+            }
+            else if ((dates.rentDate > element.rentDate && dates.returnDate > element.returnDate) || (dates.rentDate < element.rentDate && dates.returnDate < element.returnDate)) {
+              this.toastrService.success("You're directed to payment page");
+              this.directingToPayment();
+            }
+            else {
+              this.toastrService.warning("Car is not available please select other dates!")
+            }
+          });
+        }
       }
     },
       1000);
 
+
+  }
+
+  directingToPayment() {
+
+    this.closeModal();
+    this.rentalModel = this.rentalForm.value;
+    this.rentalModel.carId = this.car.carId;
+    this.rentalModel.totalPrice = this.differenceDates() * this.car.dailyPrice;
+    this.rentalService.rentalModel = this.rentalModel;
+    this.router.navigate(['/rentals/rent/' + this.car.carId]);
   }
 
 }

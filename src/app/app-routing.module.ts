@@ -11,6 +11,7 @@ import { LoginComponent } from './components/login/login.component';
 import { RentalComponent } from './components/rental/rental.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { LoginGuard } from './guards/login.guard';
+import { MyrentalsComponent } from './components/myrentals/myrentals.component';
 
 const routes: Routes = [
   { path: "", pathMatch: "full", component: CarComponent },
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: "cars/brand/:brandId/color/:colorId", component: CarComponent },
   { path: "login", component: LoginComponent },
   { path: "cars/cardetail/:carId", component: CarDetailComponent },
+  { path: "myrentals", component: MyrentalsComponent },
 
   { path: "rentals/rent/:carId", component: RentalComponent }
 ];
@@ -32,5 +34,6 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
+
 })
 export class AppRoutingModule { }

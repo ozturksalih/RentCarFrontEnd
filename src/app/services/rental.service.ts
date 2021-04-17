@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { Car } from '../models/car';
 import { ListResponseModel } from '../models/listResponseModel';
 import { Rental } from '../models/rental';
+import { RentalDto } from '../models/rentalDto';
 import { ResponseModel } from '../models/responseModel';
 import { CarService } from './car.service';
 @Injectable({
@@ -13,7 +14,7 @@ import { CarService } from './car.service';
 export class RentalService {
 
   car: Car[] = [];
-  carToRent: Rental;
+  rentalModel: Rental;
   dataLoaded = false;
   apiUrl = environment.apiUrl + "rentals/";
 
@@ -24,7 +25,11 @@ export class RentalService {
     let newPath = this.apiUrl + "getbycarid?carId=" + carId;
     return this.httpClient.get<ListResponseModel<Rental>>(newPath);
   }
-
+  getRentalDetailByCustomerId(customerId: number):
+    Observable<ListResponseModel<RentalDto>> {
+    let newPath = this.apiUrl + "getdetailbycustomerid?customerId=" + customerId;
+    return this.httpClient.get<ListResponseModel<RentalDto>>(newPath);
+  }
   addRental(rental: Rental): Observable<ResponseModel> {
     let newPath = this.apiUrl + "add";
     return this.httpClient.post<ResponseModel>(newPath, rental);

@@ -1,0 +1,22 @@
+<div class="content">
+  <table *ngIf="dataLoaded == true" class="table table-striped">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Full Name</th>
+        <th scope="col">Brand Model</th>
+        <th scope="col">Rent -> Return</th>
+        <th scope="col">Total Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let rental of myRentals">
+        <th scope="row">1</th>
+        <td>{{ rental.firstName }} {{ rental.lastName }}</td>
+        <td>{{ rental.brandName }} {{ rental.description }}</td>
+        <td>{{ rental.rentDate | date }} -> {{ rental.returnDate | date }}</td>
+        <td>{{ rental.totalPrice | currency }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -28,6 +28,7 @@ import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { SpinnerComponent } from './components/spinner/spinner.component';
+import { MyrentalsComponent } from './components/myrentals/myrentals.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     CarUpdateComponent,
     LoginComponent,
     SignupComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    MyrentalsComponent
   ],
   imports: [
     BrowserModule,

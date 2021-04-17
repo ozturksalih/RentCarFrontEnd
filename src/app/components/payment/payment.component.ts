@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'
 import { RentalService } from 'src/app/services/rental.service';
 import { Rental } from 'src/app/models/rental';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-payment',
@@ -15,13 +16,14 @@ export class PaymentComponent implements OnInit {
 
   paymentForm: FormGroup;
   rentalPrice: Rental;
-  carToRent = this.rentalService.carToRent;
+  rentalModel = this.rentalService.rentalModel;
 
   constructor(
     private paymentService: PaymentService,
     private formBuilder: FormBuilder,
     private rentalService: RentalService,
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -29,10 +31,11 @@ export class PaymentComponent implements OnInit {
   }
 
   addRental() {
-    this.rentalService.addRental(this.carToRent).subscribe((response) => {
-
+    this.rentalService.addRental(this.rentalModel).subscribe((response) => {
+      this.router.navigate(["/"]);
     }, (responseError) => {
       this.toastrService.error("Couldn't send data to rental service!");
+      console.log(responseError);
     })
   }
   createPaymentForm() {
@@ -53,17 +56,22 @@ export class PaymentComponent implements OnInit {
       cardNumber: paymentWithoutAmount.cardNumber,
       cardExpiryDate: paymentWithoutAmount.cardExpiryDate,
       cardCVV: paymentWithoutAmount.cardCVV,
-      paymentAmount: this.rentalService.carToRent.totalPrice
+      paymentAmount: this.rentalService.rentalModel.totalPrice
     })
     if (this.paymentForm.valid) {
       let paymentModel = Object.assign({}, this.paymentForm.value);
-      this.paymentService.pay(paymentModel).subscribe((response) => {
-        this.toastrService.success("Thanks for using our services!");
-        this.addRental();
-      })
+      this.addPayToApi(paymentModel);
     } else {
       this.toastrService.error("Please fill all of the blanks");
     }
 
+  }
+
+  addPayToApi(paymentModel: Payment) {
+    this.paymentService.pay(paymentModel).subscribe((response) => {
+      this.toastrService.success("Thanks for using our services!");
+
+      this.addRental();
+    })
   }
 }

@@ -22,7 +22,7 @@ export class RentalComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
-      console.log(params);
+
       if (params["carId"]) {
         this.getCarById(params["carId"]);
       }
@@ -32,7 +32,7 @@ export class RentalComponent implements OnInit {
   }
 
   getRentalDetail() {
-    this.rentalDetail = this.rentalService.carToRent;
+    this.rentalDetail = this.rentalService.rentalModel;
   }
 
   getCarById(carId: number) {
