@@ -17,7 +17,10 @@
       <div class="card-body">
         <h5 class="card-title">Check Your Details</h5>
 
-        <table *ngIf="carDetail" class="table table-striped mt-2">
+        <table
+          *ngIf="carDetail && rentalDetailLoaded"
+          class="table table-striped mt-2"
+        >
           <tbody>
             <tr>
               <th scope="row">Brand Model</th>

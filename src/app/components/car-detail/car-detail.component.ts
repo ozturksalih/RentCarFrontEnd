@@ -11,8 +11,6 @@ import { CarImageService } from 'src/app/services/car-image.service';
 import { CarService } from 'src/app/services/car.service';
 import { RentalService } from 'src/app/services/rental.service';
 import { environment } from 'src/environments/environment';
-import { CustomerService } from 'src/app/services/customer.service';
-import { Customer } from 'src/app/models/customer';
 
 
 
@@ -24,7 +22,6 @@ import { Customer } from 'src/app/models/customer';
 export class CarDetailComponent implements OnInit {
 
   car: Car;
-  customer: Customer;
   rentalForm: FormGroup;
   rentalData = false;
   rentals: Rental[];
@@ -45,11 +42,12 @@ export class CarDetailComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private toastrService: ToastrService,
     private router: Router,
-    private rentalService: RentalService,
-    private customerService: CustomerService
+    private rentalService: RentalService
   ) {
 
   }
+
+
 
 
 
@@ -61,7 +59,6 @@ export class CarDetailComponent implements OnInit {
         this.getCarImages(params["carId"]);
       }
       this.createRentalForm();
-
     })
   }
 
@@ -70,7 +67,7 @@ export class CarDetailComponent implements OnInit {
   createRentalForm() {
     this.rentalForm = this.formBuilder.group({
       carId: ['', Validators.required],
-      customerId: ['', Validators.required],
+
       rentDate: ['', Validators.required],
       returnDate: ['', Validators.required]
     })

@@ -16,7 +16,7 @@ export class MyrentalsComponent implements OnInit {
   user: User;
   dataLoaded = false;
   customerLoaded = false;
-  customers: Customer[] = [];
+  customers: Customer[];
   myRentals: RentalDto[] = [];
 
   constructor(
@@ -32,7 +32,6 @@ export class MyrentalsComponent implements OnInit {
   }
 
   getAll() {
-
     this.getCustomer();
     this.getMyRentals();
   }
@@ -67,8 +66,7 @@ export class MyrentalsComponent implements OnInit {
 
         this.rentalService.getRentalDetailByCustomerId(this.customers[0].id).subscribe(
           (response) => {
-            this.myRentals = response.data
-
+            this.myRentals = response.data;
             this.dataLoaded = true;
           }
         )
