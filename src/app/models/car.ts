@@ -7,5 +7,6 @@ export interface Car {
     available: boolean;
     modelYear: string;
     dailyPrice: number;
-    description: string
+    description: string;
+    transmission: string;
 }

@@ -29,6 +29,7 @@ import { SignupComponent } from './components/signup/signup.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { MyrentalsComponent } from './components/myrentals/myrentals.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { MyrentalsComponent } from './components/myrentals/myrentals.component';
     LoginComponent,
     SignupComponent,
     SpinnerComponent,
-    MyrentalsComponent
+    MyrentalsComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

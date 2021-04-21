@@ -25,7 +25,7 @@
             <th>{{ car.carId }}</th>
             <td>{{ car.brandName }} {{ car.description }}</td>
             <td>{{ car.modelYear }}</td>
-            <td>vites ekle!</td>
+            <td>{{ car.transmission }}</td>
             <td>{{ car.colorName }}</td>
             <td>{{ car.dailyPrice | currency }}</td>
             <td>
@@ -230,6 +230,15 @@
               formControlName="modelYear"
               placeholder="Enter Car Model Year"
             />
+          </div>
+          <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01"
+              >Transmission</label
+            >
+            <select class="form-select" formControlName="transmission">
+              <option>Automatic</option>
+              <option value="">Manuel</option>
+            </select>
           </div>
           <div class="input-group mb-3">
             <span class="input-group-text" id="inputGroup-sizing-default"
